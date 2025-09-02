@@ -17,7 +17,7 @@ spec:
           name: argocd
     ports:
     - protocol: TCP
-      port: 3000
+      port: 3001
     - protocol: TCP
       port: 8428
   egress:
@@ -27,7 +27,7 @@ spec:
           name: spam2000
     ports:
     - protocol: TCP
-      port: 8080
+      port: 3000
     - protocol: TCP
       port: 9090
   - to: []

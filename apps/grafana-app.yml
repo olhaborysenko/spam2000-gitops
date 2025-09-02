@@ -17,6 +17,7 @@ spec:
           size: 10Gi
         service:
           type: ClusterIP
+          port: 3001
         ingress:
           enabled: false
         

@@ -305,9 +305,9 @@ argocd app history spam2000
 #### Grafana
 ```bash
 # Port forward to access Grafana
-kubectl port-forward -n monitoring svc/grafana 3000:80
+kubectl port-forward -n monitoring svc/grafana 3001:3001
 
-# Access at: http://localhost:3000
+# Access at: http://localhost:3001
 # Default credentials: admin/admin
 ```
 

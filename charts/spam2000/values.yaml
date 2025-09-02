@@ -16,8 +16,8 @@ serviceAccount:
 
 service:
   type: ClusterIP
-  port: 8080
-  targetPort: 8080
+  port: 3000
+  targetPort: 3000
 
 resources:
   limits:
@@ -43,14 +43,16 @@ securityContext: {}
 livenessProbe:
   httpGet:
     path: /
-    port: 8080
-  initialDelaySeconds: 30
-  periodSeconds: 10
+    port: 3000
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  failureThreshold: 3
 
 # Readiness probe
 readinessProbe:
   httpGet:
     path: /
-    port: 8080
-  initialDelaySeconds: 5
-  periodSeconds: 5
+    port: 3000
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
