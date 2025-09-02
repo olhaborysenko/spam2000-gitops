@@ -17,6 +17,20 @@ spec:
           enabled: true
           size: 10Gi
         retentionPeriod: 30d
+        
+        # Resource limits and requests to satisfy namespace quota
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        
+        # Pod disruption budget
+        podDisruptionBudget:
+          enabled: true
+          minAvailable: 1
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: monitoring
