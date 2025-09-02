@@ -61,6 +61,15 @@ victoria-metrics-single:
     - --search.maxQueueDuration=30s
     - --search.maxConcurrentRequests=10
     - --search.logSlowQueryThreshold=5s
+    - --logLevel=INFO
+    - --enableTCP6=false
+    - --maxConcurrentInserts=4
+    - --insertAuthKey=
+    - --search.maxUniqueTimeseries=1000000
+    - --search.maxSamplesPerQuery=1000000
+    - --search.maxQueueDuration=30s
+    - --search.maxConcurrentRequests=10
+    - --search.logSlowQueryThreshold=5s
   
   # Metrics collection configuration
   metrics:
@@ -96,12 +105,12 @@ victoria-metrics-single:
     runAsNonRoot: false
     runAsUser: 1000
   
-  # Scrape configuration for Spam2000
+  # Scrape configuration for Spam2000 - try multiple paths
   scrapeConfigs:
-    - job_name: 'spam2000'
+    - job_name: 'spam2000-root'
       static_configs:
         - targets: ['spam2000.spam2000.svc.cluster.local:3000']
-      metrics_path: '/metrics'
+      metrics_path: '/'
       scrape_interval: 15s
       scrape_timeout: 10s
       honor_labels: true
@@ -116,3 +125,58 @@ victoria-metrics-single:
           target_label: namespace
         - source_labels: [__meta_kubernetes_service_name]
           target_label: service
+  
+  # Additional scrape configs for different paths
+  extraScrapeConfigs:
+    - job_name: 'spam2000-metrics'
+      static_configs:
+        - targets: ['spam2000.spam2000.svc.cluster.local:3000']
+      metrics_path: '/metrics'
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      honor_labels: true
+    - job_name: 'spam2000-health'
+      static_configs:
+        - targets: ['spam2000.spam2000.svc.cluster.local:3000']
+      metrics_path: '/health'
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      honor_labels: true
+    - job_name: 'spam2000-status'
+      static_configs:
+        - targets: ['spam2000.spam2000.svc.cluster.local:3000']
+      metrics_path: '/status'
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      honor_labels: true
+    - job_name: 'victoria-metrics-self'
+      static_configs:
+        - targets: ['localhost:8428']
+      metrics_path: '/metrics'
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      honor_labels: true
+    - job_name: 'kubernetes-pods'
+      kubernetes_sd_configs:
+        - role: pod
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+          action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_pod_name]
+          action: replace
+          target_label: kubernetes_pod_name
