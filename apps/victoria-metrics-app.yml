@@ -6,13 +6,17 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/<your-username>/spam2000-gitops.git'
-    targetRevision: main
+    repoURL: 'https://victoriametrics.github.io/helm-charts'
+    targetRevision: 0.9.0
     chart: victoria-metrics-single
     helm:
       values: |
-        {{- .Files.Get "monitoring/victoria-metrics/values.yaml" | nindent 8 }}
-    repoURL: 'https://victoriametrics.github.io/helm-charts'
+        service:
+          type: ClusterIP
+        persistence:
+          enabled: true
+          size: 10Gi
+        retentionPeriod: 30d
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: monitoring
