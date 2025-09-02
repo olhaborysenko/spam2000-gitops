@@ -1,6 +1,15 @@
 apiVersion: v2
 name: spam2000
-description: A Helm chart for deploying spam2000 application
+description: A Helm chart for deploying Spam2000 application
 type: application
 version: 0.1.0
 appVersion: "1.0.0"
+keywords:
+  - spam2000
+  - application
+home: https://hub.docker.com/r/andriiuni/spam2000
+sources:
+  - https://hub.docker.com/r/andriiuni/spam2000
+maintainers:
+  - name: Spam2000 Team
+    email: support@spam2000.com
