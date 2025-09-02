@@ -3,13 +3,13 @@ kind: Service
 metadata:
   name: {{ include "spam2000.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ include "spam2000.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "spam2000.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: http
   selector:
-    app.kubernetes.io/name: {{ include "spam2000.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "spam2000.selectorLabels" . | nindent 4 }}
