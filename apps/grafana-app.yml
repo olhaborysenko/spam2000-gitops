@@ -11,7 +11,8 @@ spec:
     chart: grafana
     helm:
       values: |
-        adminPassword: admin
+        # Use environment variable for admin password (more secure)
+        adminPassword: ${GRAFANA_ADMIN_PASSWORD:-admin}
         persistence:
           enabled: true
           size: 10Gi
@@ -26,6 +27,9 @@ spec:
         grafana.ini:
           server:
             http_port: 3001
+          database:
+            type: sqlite3
+            path: /var/lib/grafana/grafana.db
         
         # Health check probes - use port 3001
         livenessProbe:
@@ -43,6 +47,74 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 10
           failureThreshold: 3
+        
+        # Data sources configuration
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+            - name: VictoriaMetrics
+              type: prometheus
+              url: http://victoria-metrics-victoria-metrics-single-server:8428
+              access: proxy
+              isDefault: true
+              editable: true
+              jsonData:
+                timeInterval: 15s
+                queryTimeout: 60s
+        
+        # Dashboard providers
+        dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+            - name: 'default'
+              orgId: 1
+              folder: ''
+              type: file
+              disableDeletion: false
+              updateIntervalSeconds: 10
+              allowUiUpdates: true
+              options:
+                path: /var/lib/grafana/dashboards/default
+        
+        # Dashboards
+        dashboards:
+          default:
+            node-exporter:
+              gnetId: 1860
+              revision: 22
+              datasource: VictoriaMetrics
+            kubernetes-cluster:
+              gnetId: 7249
+              revision: 1
+              datasource: VictoriaMetrics
+            victoria-metrics:
+              gnetId: 11174
+              revision: 1
+              datasource: VictoriaMetrics
+            spam2000-app:
+              gnetId: 315
+              revision: 1
+              datasource: VictoriaMetrics
+              title: "Spam2000 Application Metrics"
+              uid: spam2000-app
+              panels:
+                - title: "Spam2000 Request Rate"
+                  type: graph
+                  targets:
+                    - expr: 'rate(spam2000_requests_total[5m])'
+                      legendFormat: "Requests/sec"
+                - title: "Spam2000 Response Time"
+                  type: graph
+                  targets:
+                    - expr: 'histogram_quantile(0.95, rate(spam2000_request_duration_seconds_bucket[5m]))'
+                      legendFormat: "95th percentile"
+                - title: "Spam2000 Error Rate"
+                  type: graph
+                  targets:
+                    - expr: 'rate(spam2000_errors_total[5m])'
+                      legendFormat: "Errors/sec"
         
         ingress:
           enabled: false
