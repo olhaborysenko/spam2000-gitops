@@ -48,10 +48,21 @@ Spam2000 is a comprehensive Kubernetes application platform that implements GitO
 │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
 │                 │    │                 │    │                 │
 │ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
-│ │VictoriaMetrics│───▶│ │  Controller │ │───▶│ │VictoriaMetrics│ 
+│ │VictoriaMetrics│ │───▶│ │  Controller │ │───▶│ │VictoriaMetrics│ │
 │ │   Config    │ │    │ │             │ │    │ │   Service   │ │
 │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
+
+Namespace Isolation:
+┌─────────────────────────────────────────────────────────────────┐
+│                    Kubernetes Cluster                          │
+├─────────────────────────────────────────────────────────────────┤
+│  argocd namespace: ArgoCD control plane                       │
+├─────────────────────────────────────────────────────────────────┤
+│  spam2000 namespace: Main application with network policies   │
+├─────────────────────────────────────────────────────────────────┤
+│  monitoring namespace: Grafana + Victoria Metrics             │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ## ✅ Prerequisites
@@ -119,7 +130,7 @@ kubectl get pods -A
 spam2000/
 ├── 📁 apps/                          # ArgoCD Application manifests
 │   ├── spam2000-app.yml             # Main application deployment
-│   ├── grafana=app.yml              # Grafana monitoring stack
+│   ├── grafana-app.yml              # Grafana monitoring stack
 │   └── victoria-metrics-app.yml     # Victoria Metrics deployment
 ├── 📁 charts/                        # Helm charts
 │   └── spam2000/                    # Custom application chart
@@ -128,11 +139,17 @@ spam2000/
 │       │   ├── deployment.yml        # Deployment manifest
 │       │   └── service.yml           # Service manifest
 │       └── values.yml                # Default values
+├── 📁 namespaces/                    # Namespace and network policies
+│   ├── spam2000-namespace.yml       # Spam2000 namespace with quotas
+│   ├── monitoring-namespace.yml     # Monitoring namespace with quotas
+│   ├── spam2000-network-policy.yml  # Network policy for spam2000
+│   └── monitoring-network-policy.yml # Network policy for monitoring
 ├── 📁 monitoring/                    # Monitoring configurations
 │   ├── grafana/                      # Grafana configuration
 │   │   └── values.yaml               # Grafana Helm values
 │   └── victoria-metrics/             # Victoria Metrics config
 │       └── values.yaml               # Victoria Metrics values
+├── 📄 deploy-namespaces.sh           # Deployment script with namespaces
 └── 📄 README.md                      # This file
 ```
 
@@ -165,6 +182,23 @@ The core application deployed via Helm chart with:
 - **Self-Healing**: Automatic recovery from drift
 - **Pruning**: Clean removal of deleted resources
 - **Project**: Default project with full access
+
+### Namespace Isolation & Security
+
+- **spam2000 namespace**: Dedicated namespace for main application
+  - Resource quotas: CPU 2/4, Memory 2Gi/4Gi
+  - Network policies: Controlled ingress/egress traffic
+  - Isolated from monitoring stack with specific allow rules
+  
+- **monitoring namespace**: Dedicated namespace for observability
+  - Resource quotas: CPU 4/8, Memory 8Gi/16Gi
+  - Network policies: Allows scraping from spam2000 namespace
+  - Higher resource limits for monitoring workloads
+  
+- **Network Security**: 
+  - Pod-to-pod communication controlled by network policies
+  - DNS access allowed for service discovery
+  - Cross-namespace communication explicitly defined
 
 ## ⚙️ Configuration
 
@@ -218,16 +252,33 @@ grafana:
 ### Manual Deployment
 
 ```bash
-# 1. Deploy ArgoCD applications
+# 1. Create namespaces and apply network policies
+kubectl apply -f namespaces/
+
+# 2. Deploy ArgoCD applications
 kubectl apply -f apps/
 
-# 2. Monitor deployment status
+# 3. Monitor deployment status
 argocd app sync --all
 argocd app list
 
-# 3. Check application health
+# 4. Check application health
 kubectl get applications -n argocd
 ```
+
+### Automated Deployment with Namespaces
+
+```bash
+# Use the provided deployment script
+chmod +x deploy-namespaces.sh
+./deploy-namespaces.sh
+```
+
+The script will:
+- Create dedicated namespaces with resource quotas
+- Apply network policies for security isolation
+- Deploy all applications to their respective namespaces
+- Wait for synchronization and provide status updates
 
 ### Automated Deployment
 

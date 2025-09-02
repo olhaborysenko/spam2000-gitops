@@ -11,7 +11,7 @@ spec:
     path: charts/spam2000
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: default
+    namespace: spam2000
   syncPolicy:
     automated:
       prune: true
