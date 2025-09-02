@@ -11,26 +11,43 @@ spec:
     chart: victoria-metrics-single
     helm:
       values: |
+        # Add proper labels for network policy
+        labels:
+          app.kubernetes.io/part-of: monitoring
+        
         service:
           type: ClusterIP
-        persistence:
-          enabled: true
-          size: 10Gi
-        retentionPeriod: 30d
+          port: 8428
         
-        # Resource limits and requests to satisfy namespace quota
+        # Reduce resource requirements to fit namespace quota
         resources:
           limits:
-            cpu: 2000m
-            memory: 4Gi
+            cpu: 1000m
+            memory: 2Gi
           requests:
-            cpu: 500m
-            memory: 1Gi
+            cpu: 250m
+            memory: 512Mi
         
-        # Pod disruption budget
-        podDisruptionBudget:
+        # Simplify persistence
+        persistence:
           enabled: true
-          minAvailable: 1
+          size: 5Gi
+        
+        # Basic configuration
+        retentionPeriod: 30d
+        
+        # Disable complex features that might cause issues
+        podDisruptionBudget:
+          enabled: false
+        
+        # Add security context
+        securityContext:
+          runAsNonRoot: false
+          runAsUser: 1000
+        
+        # Add pod labels
+        podLabels:
+          app.kubernetes.io/part-of: monitoring
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: monitoring
