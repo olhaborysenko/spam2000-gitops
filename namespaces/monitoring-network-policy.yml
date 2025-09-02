@@ -5,8 +5,12 @@ metadata:
   namespace: monitoring
 spec:
   podSelector:
-    matchLabels:
-      app.kubernetes.io/part-of: monitoring
+    matchExpressions:
+    - key: app.kubernetes.io/name
+      operator: In
+      values:
+      - grafana
+      - victoria-metrics-single
   policyTypes:
   - Ingress
   - Egress
