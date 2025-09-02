@@ -1,0 +1,10 @@
+apiVersion: v2
+name: grafana
+description: Grafana monitoring dashboard with custom configuration
+type: application
+version: 0.1.0
+appVersion: "6.60.6"
+dependencies:
+  - name: grafana
+    version: 6.60.6
+    repository: https://grafana.github.io/helm-charts

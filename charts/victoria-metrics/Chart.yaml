@@ -1,0 +1,10 @@
+apiVersion: v2
+name: victoria-metrics
+description: Victoria Metrics with custom configuration for Spam2000 monitoring
+type: application
+version: 0.1.0
+appVersion: "0.9.0"
+dependencies:
+  - name: victoria-metrics-single
+    version: 0.9.0
+    repository: https://victoriametrics.github.io/helm-charts
