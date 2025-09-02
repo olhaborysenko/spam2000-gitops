@@ -28,8 +28,9 @@ Spam2000 is a comprehensive Kubernetes application platform that implements GitO
 
 - **Main Application**: Custom spam2000 application with Helm charts
 - **Monitoring Stack**: Grafana for visualization and Victoria Metrics for time-series data
-- **GitOps Workflow**: Automated deployment and synchronization via ArgoCD
+- **GitOps Workflow**: All applications managed from single Git repository with ArgoCD auto-sync
 - **Infrastructure as Code**: Declarative Kubernetes manifests and Helm charts
+- **Real-time Updates**: Changes in Git automatically trigger deployments without manual intervention
 
 ## 🏗️ Architecture
 
@@ -86,20 +87,31 @@ Before deploying this platform, ensure you have:
 
 ## 🚀 Quick Start
 
+### 🎯 **GitOps Benefits - Why This Approach?**
+
+The platform now uses **Option 1** - all applications managed from your Git repository:
+
+- ✅ **Auto-Sync**: ArgoCD automatically detects changes in your Git repo
+- ✅ **No Manual Intervention**: Changes push to Git → Auto-deploy to cluster
+- ✅ **Version Control**: All configurations tracked in Git history
+- ✅ **Rollback**: Easy rollback to previous Git commits
+- ✅ **Collaboration**: Team can review changes via Pull Requests
+- ✅ **Audit Trail**: Complete history of who changed what and when
+
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/spam2000-gitops.git
+git clone https://github.com/olhaborysenko/spam2000-gitops.git
 cd spam2000-gitops
 ```
 
-### 2. Configure ArgoCD Applications
-
-Update the repository URLs in your application manifests:
+### 2. Update Helm Dependencies
 
 ```bash
-# Update repository URLs in app manifests
-sed -i 's/<your-username>/your-actual-username/g' apps/*.yml
+# Update dependencies for Grafana and Victoria Metrics
+cd charts/grafana && helm dependency update
+cd ../victoria-metrics && helm dependency update
+cd ..
 ```
 
 ### 3. Deploy Applications
@@ -132,24 +144,27 @@ spam2000/
 │   ├── spam2000-app.yml             # Main application deployment
 │   ├── grafana-app.yml              # Grafana monitoring stack
 │   └── victoria-metrics-app.yml     # Victoria Metrics deployment
-├── 📁 charts/                        # Helm charts
-│   └── spam2000/                    # Custom application chart
-│       ├── Chart.yml                 # Chart metadata
-│       ├── templates/                # Kubernetes templates
-│       │   ├── deployment.yml        # Deployment manifest
-│       │   └── service.yml           # Service manifest
-│       └── values.yml                # Default values
+├── 📁 charts/                        # Helm charts (all managed from Git repo)
+│   ├── spam2000/                    # Custom application chart
+│   │   ├── Chart.yaml               # Chart metadata
+│   │   ├── templates/                # Kubernetes templates
+│   │   │   ├── deployment.yaml      # Deployment manifest
+│   │   │   ├── service.yaml         # Service manifest
+│   │   │   ├── serviceaccount.yaml  # Service account
+│   │   │   ├── _helpers.tpl         # Helm helper functions
+│   │   │   └── NOTES.txt            # Post-installation notes
+│   │   └── values.yaml              # Default values
+│   ├── grafana/                     # Custom Grafana chart
+│   │   ├── Chart.yaml               # References official Grafana chart
+│   │   └── values.yaml              # Custom Grafana configuration
+│   └── victoria-metrics/            # Custom Victoria Metrics chart
+│       ├── Chart.yaml               # References official VM chart
+│       └── values.yaml              # Custom VM configuration
 ├── 📁 namespaces/                    # Namespace and network policies
 │   ├── spam2000-namespace.yml       # Spam2000 namespace with quotas
 │   ├── monitoring-namespace.yml     # Monitoring namespace with quotas
 │   ├── spam2000-network-policy.yml  # Network policy for spam2000
 │   └── monitoring-network-policy.yml # Network policy for monitoring
-├── 📁 monitoring/                    # Monitoring configurations
-│   ├── grafana/                      # Grafana configuration
-│   │   └── values.yaml               # Grafana Helm values
-│   └── victoria-metrics/             # Victoria Metrics config
-│       └── values.yaml               # Victoria Metrics values
-├── 📄 deploy-namespaces.sh           # Deployment script with namespaces
 └── 📄 README.md                      # This file
 ```
 
@@ -166,22 +181,26 @@ The core application deployed via Helm chart with:
 ### Monitoring Stack
 
 #### Grafana
-- **Version**: 6.60.6
+- **Version**: 6.60.6 (via Helm dependency)
 - **Purpose**: Metrics visualization and dashboards
 - **Namespace**: `monitoring`
-- **Features**: Automated deployment, self-healing
+- **Features**: Automated deployment, self-healing, custom dashboards
+- **Configuration**: Managed from Git repo with custom values
 
 #### Victoria Metrics
 - **Purpose**: High-performance time-series database
 - **Namespace**: `monitoring`
-- **Features**: Single-node deployment, metrics storage
+- **Features**: Single-node deployment, metrics storage, Spam2000 scraping
+- **Configuration**: Managed from Git repo with custom values
 
 ### ArgoCD Integration
 
-- **Automated Sync**: Continuous deployment from Git
+- **Automated Sync**: Continuous deployment from Git with auto-sync enabled
 - **Self-Healing**: Automatic recovery from drift
 - **Pruning**: Clean removal of deleted resources
 - **Project**: Default project with full access
+- **GitOps Workflow**: All applications managed from single Git repository
+- **Real-time Updates**: Changes in Git automatically trigger deployments
 
 ### Namespace Isolation & Security
 
@@ -215,7 +234,7 @@ export ARGOCD_AUTH_TOKEN=your-auth-token
 
 #### Spam2000 Application
 
-Edit `charts/spam2000/values.yml`:
+Edit `charts/spam2000/values.yaml`:
 
 ```yaml
 # Application configuration
@@ -227,24 +246,44 @@ app:
 # Resource limits
 resources:
   limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
     cpu: 500m
     memory: 512Mi
-  requests:
-    cpu: 250m
-    memory: 256Mi
 ```
 
-#### Monitoring Configuration
+#### Grafana Configuration
 
-Edit monitoring values files in `monitoring/` directory:
+Edit `charts/grafana/values.yaml`:
 
 ```yaml
 # Grafana configuration
 grafana:
-  adminPassword: "your-secure-password"
+  adminPassword: ${GRAFANA_ADMIN_PASSWORD:-admin}
   persistence:
     enabled: true
     size: 10Gi
+  service:
+    port: 3001
+    targetPort: 3001
+```
+
+#### Victoria Metrics Configuration
+
+Edit `charts/victoria-metrics/values.yaml`:
+
+```yaml
+# Victoria Metrics configuration
+victoria-metrics-single:
+  server:
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+  persistence:
+    enabled: true
+    size: 5Gi
 ```
 
 ## 🚀 Deployment
@@ -266,27 +305,65 @@ argocd app list
 kubectl get applications -n argocd
 ```
 
-### Automated Deployment with Namespaces
+### GitOps Deployment Workflow
+
+The platform now uses a proper GitOps approach:
+
+1. **All configurations are stored in your Git repository**
+2. **ArgoCD watches your repo for changes**
+3. **Changes automatically trigger deployments**
+4. **No manual sync required after initial setup**
+
+### Initial Setup on EC2
 
 ```bash
-# Use the provided deployment script
-chmod +x deploy-namespaces.sh
-./deploy-namespaces.sh
+# 1. Clone your GitOps repository
+git clone https://github.com/olhaborysenko/spam2000-gitops.git
+cd spam2000-gitops
+
+# 2. Update Helm dependencies
+cd charts/grafana && helm dependency update
+cd ../victoria-metrics && helm dependency update
+cd ..
+
+# 3. Deploy applications
+kubectl apply -f apps/spam2000-app.yml -n argocd
+kubectl apply -f apps/grafana-app.yml -n argocd
+kubectl apply -f apps/victoria-metrics-app.yml -n argocd
 ```
 
-The script will:
-- Create dedicated namespaces with resource quotas
-- Apply network policies for security isolation
-- Deploy all applications to their respective namespaces
-- Wait for synchronization and provide status updates
+### 🔄 **Making Changes - GitOps Workflow**
+
+After initial setup, here's how to make changes:
+
+```bash
+# 1. Edit any configuration file (e.g., charts/grafana/values.yaml)
+vim charts/grafana/values.yaml
+
+# 2. Commit and push changes
+git add .
+git commit -m "Update Grafana configuration"
+git push origin main
+
+# 3. ArgoCD automatically detects changes and syncs!
+# No manual kubectl apply needed!
+```
+
+**Example Changes You Can Make:**
+- Modify Grafana dashboards in `charts/grafana/values.yaml`
+- Update Victoria Metrics scraping config in `charts/victoria-metrics/values.yaml`
+- Change Spam2000 resources in `charts/spam2000/values.yaml`
+- Add new dashboards or data sources
 
 ### Automated Deployment
 
 The platform supports automated deployment through:
 
-- **GitOps Workflow**: Changes in Git automatically trigger deployments
-- **ArgoCD Sync**: Continuous synchronization with repository
+- **GitOps Workflow**: All applications managed from single Git repository
+- **ArgoCD Auto-Sync**: Changes in Git automatically trigger deployments
+- **Continuous Synchronization**: Real-time updates without manual intervention
 - **Health Checks**: Automatic health monitoring and alerts
+- **Self-Healing**: Automatic recovery from configuration drift
 
 ### Rollback Strategy
 
@@ -346,7 +423,12 @@ minikube start
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-# 3. Deploy applications
+# 3. Update Helm dependencies
+cd charts/grafana && helm dependency update
+cd ../victoria-metrics && helm dependency update
+cd ..
+
+# 4. Deploy applications
 kubectl apply -f apps/
 ```
 
@@ -355,12 +437,18 @@ kubectl apply -f apps/
 ```bash
 # Validate Helm charts
 helm lint charts/spam2000/
+helm lint charts/grafana/
+helm lint charts/victoria-metrics/
 
 # Test deployment
 helm install test-release charts/spam2000/ --dry-run
+helm install test-grafana charts/grafana/ --dry-run
+helm install test-vm charts/victoria-metrics/ --dry-run
 
-# Run integration tests
-kubectl apply -f tests/
+# Update dependencies
+cd charts/grafana && helm dependency update
+cd ../victoria-metrics && helm dependency update
+cd ..
 ```
 
 ### Debugging
@@ -457,4 +545,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by the Spam2000 Team**
 
-For support and questions, please [open an issue](https://github.com/<your-username>/spam2000-gitops/issues) or contact the team.
+For support and questions, please [open an issue](https://github.com/olhaborysenko/spam2000-gitops/issues) or contact the team.

@@ -128,7 +128,17 @@ grafana:
         cpu: 100m
         memory: 128Mi
   
-  # Sidecar resources
+  # Download dashboards resources - this is the container causing the quota issue
+  downloadDashboards:
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  
+  # Sidecar resources for any additional containers
   sidecar:
     resources:
       limits:
@@ -137,3 +147,7 @@ grafana:
       requests:
         cpu: 100m
         memory: 128Mi
+  
+
+  
+

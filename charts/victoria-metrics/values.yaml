@@ -100,16 +100,7 @@ victoria-metrics-single:
   scrapeConfigs:
     - job_name: 'spam2000'
       static_configs:
-        - targets: ['spam2000-spam2000.spam2000.svc.cluster.local:3000']
-      metrics_path: '/metrics'
-      scrape_interval: 15s
-      scrape_timeout: 10s
-  
-  # Additional scrape configs
-  extraScrapeConfigs:
-    - job_name: 'spam2000-app'
-      static_configs:
-        - targets: ['spam2000-spam2000.spam2000.svc.cluster.local:3000']
+        - targets: ['spam2000.spam2000.svc.cluster.local:3000']
       metrics_path: '/metrics'
       scrape_interval: 15s
       scrape_timeout: 10s
