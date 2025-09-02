@@ -158,8 +158,8 @@ show_access_info() {
     echo
     
     echo "🚀 Spam2000 App (spam2000 namespace):"
-    echo "   kubectl port-forward -n spam2000 svc/spam2000 8080:8080"
-    echo "   URL: http://localhost:8080"
+    echo "   kubectl port-forward -n spam2000 svc/spam2000 8081:8080"
+    echo "   URL: http://localhost:8081"
     echo
     
     echo "🎛️ ArgoCD (argocd namespace):"

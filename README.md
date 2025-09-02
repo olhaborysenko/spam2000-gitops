@@ -319,6 +319,14 @@ kubectl port-forward -n monitoring svc/victoria-metrics 8428:8428
 # Access at: http://localhost:8428
 ```
 
+#### Spam2000 Application
+```bash
+# Port forward to access Spam2000
+kubectl port-forward -n spam2000 svc/spam2000 8081:8080
+
+# Access at: http://localhost:8081
+```
+
 ### Metrics Collection
 
 The platform automatically collects:
