@@ -15,9 +15,18 @@ spec:
         persistence:
           enabled: true
           size: 10Gi
+        
+        # Grafana service configuration - use 3001 for both external and internal
         service:
           type: ClusterIP
           port: 3001
+          targetPort: 3001
+        
+        # Grafana server configuration - listen on port 3001 internally
+        grafana.ini:
+          server:
+            http_port: 3001
+        
         ingress:
           enabled: false
         
