@@ -1,0 +1,60 @@
+adminUser: admin
+adminPassword: admin
+
+service:
+  type: NodePort
+  nodePort: 30000
+
+persistence:
+  enabled: false
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: VictoriaMetrics
+        type: prometheus
+        url: http://vm-victoria-metrics-single-server:8428
+        access: proxy
+        isDefault: true
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: "default"
+        orgId: 1
+        folder: ""
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards
+
+dashboards:
+  default:
+    kubernetes:
+      gnetId: 6417
+      revision: 1
+      datasource: VictoriaMetrics
+    spam2000:
+      json: |
+        {
+          "id": null,
+          "title": "Spam2000 Metrics",
+          "timezone": "browser",
+          "panels": [
+            {
+              "type": "graph",
+              "title": "Requests per Second",
+              "targets": [
+                {
+                  "expr": "rate(http_requests_total[1m])",
+                  "legendFormat": "RPS"
+                }
+              ]
+            }
+          ],
+          "schemaVersion": 27,
+          "version": 1
+        }

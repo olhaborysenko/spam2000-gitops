@@ -1,0 +1,9 @@
+server:
+  image:
+    repository: victoriametrics/victoria-metrics
+    tag: v1.103.0
+  retentionPeriod: 1
+  extraArgs:
+    - "--promscrape.config=/etc/prometheus/prometheus.yml"
+
+resources: {}
