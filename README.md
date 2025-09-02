@@ -48,7 +48,7 @@ Spam2000 is a comprehensive Kubernetes application platform that implements GitO
 │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
 │                 │    │                 │    │                 │
 │ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
-│ │VictoriaMetrics│ │───▶│ │  Controller │ │───▶│ │VictoriaMetrics│ │
+│ │VictoriaMetrics│───▶│ │  Controller │ │───▶│ │VictoriaMetrics│ 
 │ │   Config    │ │    │ │             │ │    │ │   Service   │ │
 │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
