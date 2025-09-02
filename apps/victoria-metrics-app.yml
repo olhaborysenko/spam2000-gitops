@@ -11,15 +11,12 @@ spec:
     chart: victoria-metrics-single
     helm:
       values: |
-        # Add proper labels for network policy
-        labels:
-          app.kubernetes.io/part-of: monitoring
-        
+        # Basic service configuration
         service:
           type: ClusterIP
           port: 8428
         
-        # Reduce resource requirements to fit namespace quota
+        # Resource requirements that fit namespace quota
         resources:
           limits:
             cpu: 1000m
@@ -28,26 +25,43 @@ spec:
             cpu: 250m
             memory: 512Mi
         
-        # Simplify persistence
+        # Persistence configuration
         persistence:
           enabled: true
           size: 5Gi
         
-        # Basic configuration
+        # Basic settings
         retentionPeriod: 30d
         
-        # Disable complex features that might cause issues
+        # Disable problematic features
         podDisruptionBudget:
           enabled: false
         
-        # Add security context
+        # Security context
         securityContext:
           runAsNonRoot: false
           runAsUser: 1000
         
-        # Add pod labels
+        # Pod labels that match our network policy
         podLabels:
+          app.kubernetes.io/name: victoria-metrics-single
           app.kubernetes.io/part-of: monitoring
+        
+        # Service labels
+        serviceLabels:
+          app.kubernetes.io/name: victoria-metrics-single
+          app.kubernetes.io/part-of: monitoring
+        
+        # Disable any complex features
+        serviceMonitor:
+          enabled: false
+        
+        # Basic container settings
+        containerPort: 8428
+        extraArgs:
+          - --httpListenAddr=:8428
+          - --maxHourlySeries=1000000
+          - --maxDailySeries=1000000
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: monitoring
