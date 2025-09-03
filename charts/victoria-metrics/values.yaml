@@ -113,7 +113,7 @@ victoria-metrics-single:
       scrape_timeout: 10s
       honor_labels: true
 
-  # Optimized scrape configurations
+  # Kubernetes service discovery configuration for spam2000
   extraScrapeConfigs:
     - job_name: 'spam2000-app'
       kubernetes_sd_configs:

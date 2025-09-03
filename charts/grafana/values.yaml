@@ -22,14 +22,14 @@ grafana:
   service:
     type: ClusterIP
     port: 3001  # External port - must match what we're connecting to
-    targetPort: 3001  # Internal container port
+    targetPort: 3000  # Internal container port
     annotations: {}
 
   # Grafana configuration
   grafana.ini:
     server:
-      http_port: 3001
-      root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
+      http_port: 3000
+      root_url: "%(protocol)s://%(domain)s:3001/"
     database:
       type: sqlite3
       path: /var/lib/grafana/grafana.db
@@ -64,7 +64,7 @@ grafana:
   livenessProbe:
     httpGet:
       path: /api/health
-      port: 3001
+      port: 3000
     initialDelaySeconds: 60
     periodSeconds: 30
     failureThreshold: 3
@@ -73,7 +73,7 @@ grafana:
   readinessProbe:
     httpGet:
       path: /api/health  # Use /api/health instead of /api/ready
-      port: 3001
+      port: 3000
     initialDelaySeconds: 30
     periodSeconds: 10
     failureThreshold: 3
