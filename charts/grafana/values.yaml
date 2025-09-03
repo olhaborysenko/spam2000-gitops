@@ -130,12 +130,10 @@ grafana:
   ingress:
     enabled: false
   
-  # Admin password - managed by local Kubernetes Secret
-  # The secret 'grafana-admin-secret' should exist in the monitoring namespace
-  # Create it with: kubectl create secret generic grafana-admin-secret -n monitoring --from-literal=admin-password=your_password
-  
-  # Reference the existing secret
-  secretName: grafana
+  # Admin credentials - use existing secret
+  adminUser: admin
+  admin:
+    existingSecret: grafana
   
   # Resource limits and requests to satisfy namespace quota
   resources:
