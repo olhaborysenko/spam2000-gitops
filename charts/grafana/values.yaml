@@ -2,11 +2,12 @@
 grafana:
   # Admin user configuration
   adminUser: admin
-  # Use existing Kubernetes secret for admin password
+  # Leave this empty if using secret
   adminPassword: ""
-  # Reference to existing secret
-  adminPasswordSecretName: "grafana"
-  adminPasswordSecretKey: "admin-password"
+  # Reference existing Kubernetes secret
+  adminPasswordSecret:
+    name: grafana            # name of the Kubernetes secret
+    key: admin-password      # key in that secret containing the password
 
   # Security context - best practice
   securityContext:
