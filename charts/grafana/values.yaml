@@ -89,47 +89,44 @@ grafana:
         options:
           path: /var/lib/grafana/dashboards/default
   
-  # Dashboards configuration - override defaults to remove unwanted ones
-  
-  # Disable default dashboards from the official chart
-  grafana:
-    dashboards:
-      default:
-        # Only include the dashboards we want
-        node-exporter:
-          gnetId: 1860
-          revision: 22
-          datasource: VictoriaMetrics
-        kubernetes-cluster:
-          gnetId: 7249
-          revision: 1
-          datasource: VictoriaMetrics
-        victoria-metrics:
-          gnetId: 11174
-          revision: 1
-          datasource: VictoriaMetrics
-        spam2000-app:
-          gnetId: 315
-          revision: 1
-          datasource: VictoriaMetrics
-          title: "Spam2000 Application Metrics"
-          uid: spam2000-app
-          panels:
-            - title: "Spam2000 Request Rate"
-              type: graph
-              targets:
-                - expr: 'rate(spam2000_requests_total[5m])'
-                  legendFormat: "Requests/sec"
-            - title: "Spam2000 Response Time"
-              type: graph
-              targets:
-                - expr: 'histogram_quantile(0.95, rate(spam2000_request_duration_seconds_bucket[5m]))'
-                  legendFormat: "95th percentile"
-            - title: "Spam2000 Error Rate"
-              type: graph
-              targets:
-                - expr: 'rate(spam2000_errors_total[5m])'
-                  legendFormat: "Errors/sec"
+  # Dashboards configuration - must be at root level for Helm chart
+  dashboards:
+    default:
+      # Only include the dashboards we want
+      node-exporter:
+        gnetId: 1860
+        revision: 22
+        datasource: VictoriaMetrics
+      kubernetes-cluster:
+        gnetId: 7249
+        revision: 1
+        datasource: VictoriaMetrics
+      victoria-metrics:
+        gnetId: 11174
+        revision: 1
+        datasource: VictoriaMetrics
+      spam2000-app:
+        gnetId: 315
+        revision: 1
+        datasource: VictoriaMetrics
+        title: "Spam2000 Application Metrics"
+        uid: spam2000-app
+        panels:
+          - title: "Spam2000 Request Rate"
+            type: graph
+            targets:
+              - expr: 'rate(spam2000_requests_total[5m])'
+                legendFormat: "Requests/sec"
+          - title: "Spam2000 Response Time"
+            type: graph
+            targets:
+              - expr: 'histogram_quantile(0.95, rate(spam2000_request_duration_seconds_bucket[5m]))'
+                legendFormat: "95th percentile"
+          - title: "Spam2000 Error Rate"
+            type: graph
+            targets:
+              - expr: 'rate(spam2000_errors_total[5m])'
+                legendFormat: "Errors/sec"
   
   ingress:
     enabled: false
@@ -148,37 +145,35 @@ grafana:
       cpu: 250m
       memory: 512Mi
   
-  # Resource configurations
-  grafana:
-    # Init container resources
-    initChownData:
-      resources:
-        limits:
-          cpu: 200m
-          memory: 256Mi
-        requests:
-          cpu: 100m
-          memory: 128Mi
-    
-    # Download dashboards resources
-    downloadDashboards:
-      resources:
-        limits:
-          cpu: 200m
-          memory: 256Mi
-        requests:
-          cpu: 100m
-          memory: 128Mi
-    
-    # Sidecar resources
-    sidecar:
-      resources:
-        limits:
-          cpu: 200m
-          memory: 256Mi
-        requests:
-          cpu: 100m
-          memory: 128Mi
+  # Init container resources - must be at root level for quota compliance
+  initChownData:
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  
+  # Download dashboards resources - must be at root level for quota compliance
+  downloadDashboards:
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+  
+  # Sidecar resources - must be at root level for quota compliance
+  sidecar:
+    resources:
+      limits:
+        cpu: 200m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
   
 
   
