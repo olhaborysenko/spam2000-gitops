@@ -130,10 +130,11 @@ grafana:
   ingress:
     enabled: false
   
-  # Admin credentials - use existing secret
+  # Admin credentials - use existing secret with correct syntax
   adminUser: admin
   admin:
     existingSecret: grafana
+    secretKey: admin-password
   
   # Resource limits and requests to satisfy namespace quota
   resources:
