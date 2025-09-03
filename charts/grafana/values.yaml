@@ -130,11 +130,10 @@ grafana:
   ingress:
     enabled: false
   
-  # Admin credentials - use existing secret with correct syntax
+  # Admin credentials - use standard configuration
   adminUser: admin
-  admin:
-    existingSecret: grafana
-    secretKey: admin-password
+  # Let Helm manage the admin password automatically
+  # The secret will be created by the chart
   
   # Resource limits and requests to satisfy namespace quota
   resources:
