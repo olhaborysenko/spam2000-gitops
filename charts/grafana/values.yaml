@@ -21,8 +21,8 @@ grafana:
   # Service configuration
   service:
     type: ClusterIP
-    port: 80
-    targetPort: 3001
+    port: 3001  # External port - must match what we're connecting to
+    targetPort: 3001  # Internal container port
     annotations: {}
 
   # Grafana configuration
