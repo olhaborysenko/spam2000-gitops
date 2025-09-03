@@ -28,4 +28,4 @@ data:
         metrics_path: /metrics
         scrape_interval: 30s
         scrape_timeout: 10s
-  max_scrape_size: 33554432  # 32MB, temporary workaround for large metrics
+        max_scrape_size: 33554432  # 32MB, temporary workaround for large metrics
