@@ -31,7 +31,7 @@ The **Spam2000 GitOps Platform** is a complete Kubernetes monitoring solution th
 
 ## 🏗️ Architecture
 
-```mermaid
+```
 graph TB
     subgraph "GitHub Repository"
         A[Helm Charts] --> B[ArgoCD Apps]
