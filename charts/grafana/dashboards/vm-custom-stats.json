@@ -55,6 +55,7 @@
     "schemaVersion": 30,
     "style": "dark",
     "tags": [
+      "spam2000",
       "victoriametrics"
     ],
     "templating": {
@@ -66,7 +67,7 @@
     },
     "timepicker": {},
     "timezone": "browser",
-    "title": "VictoriaMetrics Custom Stats",
+    "title": "Spam2000 Application Dashboard",
     "uid": "vm-custom-stats",
     "version": 1
   }

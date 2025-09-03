@@ -112,7 +112,7 @@ grafana:
   # Custom dashboards
   dashboards:
     default:
-      spam2000-metrics:
+      vm-custom-stats:
         file: dashboards/vm-custom-stats.json
 
   # Resource limits - optimized
