@@ -89,43 +89,47 @@ grafana:
         options:
           path: /var/lib/grafana/dashboards/default
   
-  # Dashboards
-  dashboards:
-    default:
-      node-exporter:
-        gnetId: 1860
-        revision: 22
-        datasource: VictoriaMetrics
-      kubernetes-cluster:
-        gnetId: 7249
-        revision: 1
-        datasource: VictoriaMetrics
-      victoria-metrics:
-        gnetId: 11174
-        revision: 1
-        datasource: VictoriaMetrics
-      spam2000-app:
-        gnetId: 315
-        revision: 1
-        datasource: VictoriaMetrics
-        title: "Spam2000 Application Metrics"
-        uid: spam2000-app
-        panels:
-          - title: "Spam2000 Request Rate"
-            type: graph
-            targets:
-              - expr: 'rate(spam2000_requests_total[5m])'
-                legendFormat: "Requests/sec"
-          - title: "Spam2000 Response Time"
-            type: graph
-            targets:
-              - expr: 'histogram_quantile(0.95, rate(spam2000_request_duration_seconds_bucket[5m]))'
-                legendFormat: "95th percentile"
-          - title: "Spam2000 Error Rate"
-            type: graph
-            targets:
-              - expr: 'rate(spam2000_errors_total[5m])'
-                legendFormat: "Errors/sec"
+  # Dashboards configuration - override defaults to remove unwanted ones
+  
+  # Disable default dashboards from the official chart
+  grafana:
+    dashboards:
+      default:
+        # Only include the dashboards we want
+        node-exporter:
+          gnetId: 1860
+          revision: 22
+          datasource: VictoriaMetrics
+        kubernetes-cluster:
+          gnetId: 7249
+          revision: 1
+          datasource: VictoriaMetrics
+        victoria-metrics:
+          gnetId: 11174
+          revision: 1
+          datasource: VictoriaMetrics
+        spam2000-app:
+          gnetId: 315
+          revision: 1
+          datasource: VictoriaMetrics
+          title: "Spam2000 Application Metrics"
+          uid: spam2000-app
+          panels:
+            - title: "Spam2000 Request Rate"
+              type: graph
+              targets:
+                - expr: 'rate(spam2000_requests_total[5m])'
+                  legendFormat: "Requests/sec"
+            - title: "Spam2000 Response Time"
+              type: graph
+              targets:
+                - expr: 'histogram_quantile(0.95, rate(spam2000_request_duration_seconds_bucket[5m]))'
+                  legendFormat: "95th percentile"
+            - title: "Spam2000 Error Rate"
+              type: graph
+              targets:
+                - expr: 'rate(spam2000_errors_total[5m])'
+                  legendFormat: "Errors/sec"
   
   ingress:
     enabled: false
