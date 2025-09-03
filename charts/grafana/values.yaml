@@ -2,6 +2,11 @@
 grafana:
   # Admin user configuration
   adminUser: admin
+  # Use existing Kubernetes secret for admin password
+  adminPassword: ""
+  # Reference to existing secret
+  adminPasswordSecretName: "grafana"
+  adminPasswordSecretKey: "admin-password"
 
   # Security context - best practice
   securityContext:
