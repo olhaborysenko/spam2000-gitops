@@ -26,6 +26,8 @@ spec:
           args:
             - -promscrape.config=/etc/vmagent/scrape-config.yaml
             - -remoteWrite.url=http://{{ .Release.Name }}-victoria-metrics-single-server:8428/api/v1/write
+            - -promscrape.disableIPv6=false
+            - -promscrape.disableIPv4=false
           ports:
             - containerPort: 8429
               name: http
