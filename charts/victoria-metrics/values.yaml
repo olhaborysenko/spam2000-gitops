@@ -52,35 +52,9 @@ victoria-metrics-single:
   # Basic container settings
   containerPort: 8428
 
-  # Basic scrape configuration - use the correct field for the subchart
-  scrapeConfigs:
-    - job_name: 'spam2000-app'
-      kubernetes_sd_configs:
-        - role: pod
-          namespaces:
-            names:
-              - spam2000
-      relabel_configs:
-        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-          action: keep
-          regex: true
-        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-          action: replace
-          target_label: __metrics_path__
-          regex: (.+)
-        - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-          action: replace
-          regex: '([^:]+)(?::\d+)?;(\d+)'
-          replacement: '${1}:${2}'
-          target_label: __address__
-        - action: labelmap
-          regex: __meta_kubernetes_pod_label_(.+)
-        - source_labels: [__meta_kubernetes_namespace]
-          action: replace
-          target_label: kubernetes_namespace
-        - source_labels: [__meta_kubernetes_pod_name]
-          action: replace
-          target_label: kubernetes_pod_name
+  # Server configuration - only supported fields
+  server:
+    # No extra configuration needed - Victoria Metrics exposes /metrics automatically
 
   # Metrics collection configuration
   metrics:

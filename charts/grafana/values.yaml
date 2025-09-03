@@ -95,6 +95,13 @@ grafana:
           queryTimeout: 60s
           httpMethod: POST
 
+  # Enable Prometheus Operator resources for monitoring
+  serviceMonitor:
+    enabled: true
+  
+  prometheusRule:
+    enabled: true
+
   # Dashboard providers - use sidecar approach
   dashboardProviders:
     dashboardproviders.yaml:
