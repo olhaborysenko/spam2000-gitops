@@ -25,10 +25,7 @@ spec:
       serviceAccountName: {{ include "spam2000.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      volumes:
-        - name: nginx-config
-          configMap:
-            name: {{ include "spam2000.fullname" . }}-nginx-config
+
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -45,31 +42,7 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        
-        # Nginx sidecar to fix IPv6 binding issue
-        - name: nginx-proxy
-          image: nginx:1.25
-          ports:
-            - name: proxy-http
-              containerPort: 3000
-              protocol: TCP
-          volumeMounts:
-            - name: nginx-config
-              mountPath: /etc/nginx/conf.d
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 101
-            runAsGroup: 101
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop: ["ALL"]
-          resources:
-            limits:
-              cpu: 50m
-              memory: 64Mi
-            requests:
-              cpu: 10m
-              memory: 16Mi
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
