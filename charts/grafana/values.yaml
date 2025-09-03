@@ -1,11 +1,9 @@
 # Grafana values with custom configuration
 grafana:
   # Admin user configuration
-  adminUser: admin
-  adminPassword: ""
-  adminPasswordSecret:
-    name: grafana
-    key: admin-password
+  admin:
+    existingSecret: grafana
+    secretKey: admin-password
   # Security context - best practice
   securityContext:
     runAsNonRoot: true
@@ -105,13 +103,13 @@ grafana:
       healthCheck:
         enabled: true
         timeout: 30s
-      resources:
-        limits:
-          cpu: 100m
-          memory: 128Mi
-        requests:
-          cpu: 50m
-          memory: 64Mi
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
         
   # Resource limits - optimized
   resources:
