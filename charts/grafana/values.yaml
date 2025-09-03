@@ -1,7 +1,9 @@
 # Grafana values with custom configuration
 grafana:
-  # Use environment variable for admin password (more secure)
-  adminPassword: ${GRAFANA_ADMIN_PASSWORD:-admin}
+  # Admin user configuration - password will come from secret
+  adminUser: admin
+  # adminPassword will be set via environment variable from secret
+  # The official chart will use the secret automatically
   
   persistence:
     enabled: true
@@ -17,26 +19,45 @@ grafana:
   grafana.ini:
     server:
       http_port: 3001
+      root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
     database:
       type: sqlite3
       path: /var/lib/grafana/grafana.db
+    security:
+      admin_user: admin
+      allow_embedding: true
+    users:
+      allow_sign_up: false
+      allow_org_create: false
+    auth:
+      disable_login_form: false
+      disable_signout_menu: false
+    log:
+      mode: console
+      level: info
+    server:
+      http_port: 3001
+      root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
+      serve_from_sub_path: false
   
   # Health check probes - use port 3001
   livenessProbe:
     httpGet:
       path: /api/health
       port: 3001
-    initialDelaySeconds: 60
+    initialDelaySeconds: 120
     periodSeconds: 30
-    failureThreshold: 3
+    failureThreshold: 5
+    timeoutSeconds: 10
   
   readinessProbe:
     httpGet:
       path: /api/health
       port: 3001
-    initialDelaySeconds: 30
-    periodSeconds: 10
-    failureThreshold: 3
+    initialDelaySeconds: 60
+    periodSeconds: 15
+    failureThreshold: 5
+    timeoutSeconds: 10
   
   # Data sources configuration
   datasources:
@@ -108,6 +129,13 @@ grafana:
   
   ingress:
     enabled: false
+  
+  # Admin password - managed by local Kubernetes Secret
+  # The secret 'grafana-admin-secret' should exist in the monitoring namespace
+  # Create it with: kubectl create secret generic grafana-admin-secret -n monitoring --from-literal=admin-password=your_password
+  
+  # Reference the existing secret
+  secretName: grafana-admin-secret
   
   # Resource limits and requests to satisfy namespace quota
   resources:

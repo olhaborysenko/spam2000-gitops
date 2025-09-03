@@ -545,4 +545,53 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Made with ❤️ by the Spam2000 Team**
 
+## 🔐 **Secret Management (Simple Local Approach)**
+
+### **Current Implementation:**
+- **✅ Local Secrets**: Create Kubernetes secrets locally on your machine
+- **✅ No Git Storage**: Secrets never stored in Git repository
+- **✅ ArgoCD Integration**: Grafana automatically uses the secret
+- **✅ Simple & Secure**: Clean separation of concerns
+
+### **How It Works:**
+
+1. **🔐 Create Secret Locally**:
+   ```bash
+   kubectl create secret generic grafana-admin-secret -n monitoring --from-literal=admin-password=your_password
+   ```
+
+2. **📦 Deploy with ArgoCD**:
+   - Secret exists in your cluster
+   - Grafana automatically uses it via `secretName`
+   - ArgoCD manages the application deployment
+
+3. **🔄 Password Rotation**:
+   - Update the secret locally: `kubectl patch secret grafana-admin-secret -n monitoring --type='json' -p='[{"op": "replace", "path": "/data/admin-password", "value":"<base64-encoded-password>"}]'`
+   - Restart Grafana pod to pick up new password
+
+### **Security Benefits:**
+- **🔒 No Git Exposure**: Secrets never stored in Git
+- **🎯 Local Control**: You control secrets on your machine
+- **🔄 Simple Management**: Easy to create and update
+- **🛡️ Production Ready**: Standard Kubernetes secret management
+
+### **Workflow:**
+```
+1. Create secret locally → 2. Push app config to Git → 3. ArgoCD deploys → 4. Grafana uses secret
+```
+
+### **Verification:**
+```bash
+# Check if secret exists
+kubectl get secret grafana-admin-secret -n monitoring
+
+# Check secret details
+kubectl describe secret grafana-admin-secret -n monitoring
+
+# Verify Grafana is using the secret
+kubectl get pods -n monitoring -l app.kubernetes.io/name=grafana
+```
+
 For support and questions, please [open an issue](https://github.com/olhaborysenko/spam2000-gitops/issues) or contact the team.
+
+
