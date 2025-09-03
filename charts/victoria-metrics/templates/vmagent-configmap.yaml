@@ -16,7 +16,7 @@ data:
     scrape_configs:
       - job_name: 'victoria-metrics-self'
         static_configs:
-          - targets: ['{{ .Release.Name }}-victoria-metrics-single-server:8428']
+          - targets: ['localhost:8428']
         metrics_path: '/metrics'
         scrape_interval: 15s
         scrape_timeout: 10s
