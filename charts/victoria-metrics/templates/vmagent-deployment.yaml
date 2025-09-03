@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-vmagent
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}-vmagent
+      containers:
+        - name: vmagent
+          image: victoriametrics/vmagent:latest
+          args:
+            - -promscrape.config=/etc/vmagent/scrape-config.yaml
+            - -remoteWrite.url=http://{{ .Release.Name }}-victoria-metrics-single-server:8428/api/v1/write
+          ports:
+            - containerPort: 8429
+              name: http
+          volumeMounts:
+            - name: scrape-config
+              mountPath: /etc/vmagent
+              readOnly: true
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+      volumes:
+        - name: scrape-config
+          configMap:
+            name: {{ .Release.Name }}-vmagent-config
