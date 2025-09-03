@@ -84,5 +84,5 @@ victoria-metrics-single:
 
   # vmagent configuration
   vmagent:
-    args:
+    extraArgs:
       - -enableTCP6
