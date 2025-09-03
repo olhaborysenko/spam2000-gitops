@@ -14,40 +14,42 @@ data:
         "list": [
           {
             "builtIn": 1,
-            "datasource": "-- Grafana --",
-            "panels": [
-              {
-                "datasource": "VictoriaMetrics",
-                "fieldConfig": {"defaults": {}, "overrides": []},
-                "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
-                "id": 2,
-                "title": "random_gauge_2",
-                "type": "timeseries",
-                "targets": [
-                  {"expr": "random_gauge_2", "refId": "A", "interval": "60s"}
-                ]
-              },
-              {
-                "datasource": "VictoriaMetrics",
-                "fieldConfig": {"defaults": {}, "overrides": []},
-                "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
-                "id": 3,
-                "title": "random_gauge_3",
-                "type": "timeseries",
-                "targets": [
-                  {"expr": "random_gauge_3", "refId": "A", "interval": "60s"}
-                ]
-              },
-              {
-                "datasource": "VictoriaMetrics",
-                "fieldConfig": {"defaults": {}, "overrides": []},
-                "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
-                "id": 5,
-                "title": "random_histogram_sum",
-                "type": "timeseries",
-                "targets": [
-                  {"expr": "random_histogram_sum", "refId": "A", "interval": "60s"}
-                ]
-              }
-            ],
+            "datasource": "-- Grafana --"
+          }
+        ]
+      },
+      "panels": [
+        {
+          "datasource": "VictoriaMetrics",
+          "fieldConfig": {"defaults": {}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+          "id": 2,
+          "title": "random_gauge_2",
+          "type": "timeseries",
+          "targets": [
+            {"expr": "random_gauge_2", "refId": "A", "interval": "60s"}
+          ]
+        },
+        {
+          "datasource": "VictoriaMetrics",
+          "fieldConfig": {"defaults": {}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+          "id": 3,
+          "title": "random_gauge_3",
+          "type": "timeseries",
+          "targets": [
             {"expr": "random_gauge_3", "refId": "A", "interval": "60s"}
+          ]
+        },
+        {
+          "datasource": "VictoriaMetrics",
+          "fieldConfig": {"defaults": {}, "overrides": []},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+          "id": 5,
+          "title": "random_histogram_sum",
+          "type": "timeseries",
+          "targets": [
+            {"expr": "random_histogram_sum", "refId": "A", "interval": "60s"}
+          ]
+        }
+      ],
