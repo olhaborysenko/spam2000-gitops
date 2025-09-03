@@ -289,35 +289,4 @@ kubectl describe pod -n spam2000 -l app.kubernetes.io/name=spam2000
 
 ---
 
-## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **VictoriaMetrics Team** for the excellent time-series database
-- **Grafana Labs** for the powerful visualization platform
-- **ArgoCD Community** for GitOps excellence
-- **Kubernetes Community** for the orchestration platform
-
----
-
-<div align="center">
-
-**Built with ❤️ for the Cloud Native Community**
-
-[🐛 Report Bug](https://github.com/olhaborysenko/spam2000-gitops/issues) • [✨ Request Feature](https://github.com/olhaborysenko/spam2000-gitops/issues) • [💬 Discussions](https://github.com/olhaborysenko/spam2000-gitops/discussions)
-
-</div>
