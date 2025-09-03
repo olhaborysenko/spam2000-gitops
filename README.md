@@ -31,31 +31,18 @@ The **Spam2000 GitOps Platform** is a complete Kubernetes monitoring solution th
 
 ## 🏗️ Architecture
 
-```
-graph TB
-    subgraph "GitHub Repository"
-        A[Helm Charts] --> B[ArgoCD Apps]
-        C[Manifests] --> B
-    end
+The Spam2000 GitOps Platform is composed of:
+- **ArgoCD** for GitOps-based deployment and continuous delivery
+- **Spam2000** application for generating custom metrics
+- **VictoriaMetrics** for time-series data storage and scraping
+- **Grafana** for visualization and dashboards
+- **Kubernetes** as the orchestration platform
 
-    subgraph "Kubernetes Cluster"
-        B --> D[ArgoCD Controller]
-        D --> E[Spam2000 App]
-        D --> F[VictoriaMetrics]
-        D --> G[Grafana]
+<div align="center">
 
-        E -->|metrics| F
-        F -->|data| G
-    end
+![Platform Architecture](images/environment.png)
 
-    subgraph "Monitoring Flow"
-        E --> H[/metrics endpoint]
-        H --> F
-        F --> I[Time Series DB]
-        I --> G
-        G --> J[📊 Dashboards]
-    end
-```
+</div>
 
 ### 🧩 Components
 
