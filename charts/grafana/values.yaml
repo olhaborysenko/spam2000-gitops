@@ -44,11 +44,23 @@ grafana:
     auth:
       disable_login_form: false
       disable_signout_menu: false
+      anonymous_enabled: false
+    auth.anonymous:
+      enabled: false
+    # Health check endpoints configuration
+    server:
+      allow_embedding: false
+    # Allow health endpoints without authentication
+    auth:
+      anonymous_enabled: false
+    # Health endpoints should be accessible
+    security:
+      cookie_secure: false  # Allow HTTP for health checks
     log:
       mode: console
       level: info
 
-  # Health check probes - standardized
+  # Health check probes - use endpoints that don't require auth
   livenessProbe:
     httpGet:
       path: /api/health
@@ -60,7 +72,7 @@ grafana:
 
   readinessProbe:
     httpGet:
-      path: /api/ready
+      path: /api/health  # Use /api/health instead of /api/ready
       port: 3001
     initialDelaySeconds: 30
     periodSeconds: 10
