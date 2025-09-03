@@ -44,7 +44,7 @@ grafana:
       cookie_secure: true
       cookie_samesite: strict
       disable_initial_admin_creation: false
-      disable_brute_force_login_protection: true
+      disable_brute_force_login_protection: true  # Disable login attempt lockout
     users:
       allow_sign_up: false
       allow_org_create: false
@@ -55,15 +55,6 @@ grafana:
       anonymous_enabled: false
     auth.anonymous:
       enabled: false
-    # Health check endpoints configuration
-    server:
-      allow_embedding: false
-    # Allow health endpoints without authentication
-    auth:
-      anonymous_enabled: false
-    # Health endpoints should be accessible
-    security:
-      cookie_secure: false  # Allow HTTP for health checks
     log:
       mode: console
       level: info
