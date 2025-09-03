@@ -53,27 +53,21 @@ victoria-metrics-single:
   # Basic container settings
   containerPort: 8428
 
-  # Victoria Metrics configuration
-  extraArgs:
-    - --httpListenAddr=:8428
-    - --maxHourlySeries=1000000
-    - --maxDailySeries=1000000
-    - --retentionPeriod=30d
-    - --storageDataPath=/storage
-    - --search.maxUniqueTimeseries=1000000
-    - --search.maxSamplesPerQuery=1000000
-    - --search.maxQueueDuration=30s
-    - --search.maxConcurrentRequests=10
-    - --search.logSlowQueryThreshold=5s
-    - --logLevel=INFO
-    - --enableTCP6=false
-    - --maxConcurrentInserts=4
-    - --insertAuthKey=
-    - --search.maxUniqueTimeseries=1000000
-    - --search.maxSamplesPerQuery=1000000
-    - --search.maxQueueDuration=30s
-    - --search.maxConcurrentRequests=10
-    - --search.logSlowQueryThreshold=5s
+  # Victoria Metrics server configuration
+  server:
+    # Add scrape config argument
+    extraArgs:
+      - --promscrape.config=/etc/victoria-metrics/scrape-config.yaml
+    # Mount the scrape config
+    extraVolumeMounts:
+      - name: scrape-config
+        mountPath: /etc/victoria-metrics
+        readOnly: true
+    # Add the scrape config volume
+    extraVolumes:
+      - name: scrape-config
+        configMap:
+          name: victoria-metrics-scrape-config
 
   # Metrics collection configuration
   metrics:
@@ -102,65 +96,3 @@ victoria-metrics-single:
   serviceAccount:
     create: true
     name: victoria-metrics-single
-
-  # Scrape configuration for metrics collection
-  scrapeConfigs:
-    - job_name: 'victoria-metrics-self'
-      static_configs:
-        - targets: ['localhost:8428']
-      metrics_path: '/metrics'
-      scrape_interval: 15s
-      scrape_timeout: 10s
-      honor_labels: true
-
-  # Kubernetes service discovery configuration for spam2000
-  # Using the correct field for victoria-metrics-single subchart
-  server:
-    extraArgs:
-      - --promscrape.config=/etc/victoria-metrics/scrape-config.yaml
-    extraVolumeMounts:
-      - name: scrape-config
-        mountPath: /etc/victoria-metrics
-        readOnly: true
-    extraVolumes:
-      - name: scrape-config
-        configMap:
-          name: victoria-metrics-scrape-config
-
-  # Scrape configuration via ConfigMap
-  scrapeConfig:
-    enabled: true
-    config:
-      global:
-        scrape_interval: 30s
-        scrape_timeout: 10s
-        evaluation_interval: 15s
-      
-      scrape_configs:
-        - job_name: 'spam2000-app'
-          kubernetes_sd_configs:
-            - role: pod
-              namespaces:
-                names:
-                  - spam2000
-          relabel_configs:
-            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-              action: keep
-              regex: true
-            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-              action: replace
-              target_label: __metrics_path__
-              regex: (.+)
-            - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-              action: replace
-              regex: '([^:]+)(?::\d+)?;(\d+)'
-              replacement: '${1}:${2}'
-              target_label: __address__
-            - action: labelmap
-              regex: __meta_kubernetes_pod_label_(.+)
-            - source_labels: [__meta_kubernetes_namespace]
-              action: replace
-              target_label: kubernetes_namespace
-            - source_labels: [__meta_kubernetes_pod_name]
-              action: replace
-              target_label: kubernetes_pod_name
