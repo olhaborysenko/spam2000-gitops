@@ -1,8 +1,9 @@
 # Grafana values with custom configuration
 grafana:
   # Admin user configuration
-  adminUser: admin
-  # Leave this empty if using secret
+  admin:
+    existingSecret: grafana
+    secretKey: admin-password
 
   # Security context - best practice
   securityContext:
