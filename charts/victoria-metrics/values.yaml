@@ -18,14 +18,15 @@ victoria-metrics-single:
     runAsGroup: 1000
     fsGroup: 1000
 
-  # Resource requirements - optimized
-  resources:
-    limits:
-      cpu: 500m
-      memory: 1Gi
-    requests:
-      cpu: 100m
-      memory: 256Mi
+  # Server configuration with resources
+  server:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        memory: 256Mi
 
   # Persistence configuration
   persistence:
