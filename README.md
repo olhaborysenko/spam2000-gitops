@@ -218,7 +218,9 @@ GF_SECURITY_COOKIE_SECURE: true
 
 ## 📈 Monitoring & Alerting
 
-### Key Metrics
+### Key Metrics (Example)
+> The following metrics are typical for a Spam2000 + VictoriaMetrics deployment. Your actual metrics may differ depending on the Spam2000 image and configuration. Check your `/metrics` endpoint for the current list.
+
 - `spam2000_requests_total` - Total requests
 - `spam2000_request_duration_seconds` - Request latency
 - `spam2000_errors_total` - Error count
