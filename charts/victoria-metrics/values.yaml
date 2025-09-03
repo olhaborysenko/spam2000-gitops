@@ -54,6 +54,7 @@ victoria-metrics-single:
 
   # Server configuration - only supported fields
   server:
+    enabled: true
     # No extra configuration needed - Victoria Metrics exposes /metrics automatically
 
   # Metrics collection configuration
