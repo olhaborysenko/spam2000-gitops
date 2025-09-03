@@ -97,8 +97,8 @@ grafana:
       enabled: true
       label: grafana_dashboard
       searchNamespace: monitoring
-      folder: /var/lib/grafana/dashboards/default
-      defaultFolderName: "General"
+      folder: /var/lib/grafana/dashboards
+      defaultFolderName: "Default"
       skipInvalidDashboards: false
       healthCheck:
         enabled: true
