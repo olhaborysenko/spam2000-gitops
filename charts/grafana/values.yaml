@@ -1,9 +1,6 @@
 # Grafana values with custom configuration
 grafana:
   # Admin user configuration
-  admin:
-    existingSecret: grafana
-    secretKey: admin-password
 
   # Security context - best practice
   securityContext:
