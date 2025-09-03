@@ -23,8 +23,8 @@ victoria-metrics-single:
     enabled: true
     resources:
       limits:
-        cpu: 500m
-        memory: 1Gi
+        cpu: 1
+        memory: 2Gi
       requests:
         cpu: 200m
         memory: 512Mi

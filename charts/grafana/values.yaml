@@ -109,11 +109,11 @@ grafana:
   # Resource limits - increased for stability
   resources:
     limits:
-      cpu: 1
-      memory: 2Gi
-    requests:
       cpu: 500m
-      memory: 1Gi
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
  # Init container resources - required for namespace quota
   downloadDashboards:
     resources:

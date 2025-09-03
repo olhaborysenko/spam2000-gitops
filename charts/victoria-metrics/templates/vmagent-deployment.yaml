@@ -36,11 +36,11 @@ spec:
               readOnly: true
           resources:
             limits:
-              cpu: 200m
+              cpu: 300m
               memory: 256Mi
             requests:
-              cpu: 50m
-              memory: 64Mi
+              cpu: 100m
+              memory: 128Mi
       volumes:
         - name: scrape-config
           configMap:
