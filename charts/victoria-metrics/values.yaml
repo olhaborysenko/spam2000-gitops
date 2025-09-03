@@ -81,3 +81,8 @@ victoria-metrics-single:
   serviceAccount:
     create: true
     name: victoria-metrics-single
+
+  # vmagent configuration
+  vmagent:
+    extraArgs:
+      - -enableTCP6
