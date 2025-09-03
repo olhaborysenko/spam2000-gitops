@@ -67,6 +67,26 @@ graph TB
 
 ---
 
+## 🖼️ Screenshots
+
+<div align="center">
+
+### Platform Environment
+
+![Platform Environment](images/environment.png)
+
+### ArgoCD UI
+
+![ArgoCD UI](images/argocs.png)
+
+### Grafana Dashboard
+
+![Grafana Dashboard](images/grafana.png)
+
+</div>
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -104,16 +124,28 @@ kubectl get pods -n monitoring
 ### 3️⃣ Access Services
 
 ```bash
-# Port forward to Grafana
+# Port forward to Grafana (run manually if needed)
 kubectl port-forward -n monitoring svc/grafana 3000:80
 
-# Port forward to VictoriaMetrics
+# Port forward to VictoriaMetrics (run manually if needed)
 kubectl port-forward -n monitoring svc/victoria-metrics-single-server 8428:8428
 
-# Check spam2000 metrics
+# Check spam2000 metrics (run manually if needed)
 kubectl port-forward -n spam2000 svc/spam2000 3000:3000
 curl http://localhost:3000/metrics
 ```
+
+---
+
+## 🛠️ Automated Deployment
+
+To deploy all resources at once, use the provided Python script:
+
+```bash
+python3 deploy_all.py
+```
+
+This script applies all manifests and verifies pod status. If you need to access Grafana or VictoriaMetrics UIs, use the port-forward commands above in a separate terminal.
 
 ---
 
