@@ -15,97 +15,39 @@ data:
           {
             "builtIn": 1,
             "datasource": "-- Grafana --",
-            "enable": true,
-            "hide": true,
-            "iconColor": "rgba(0, 211, 255, 1)",
-            "name": "Annotations & Alerts",
-            "type": "dashboard"
-          }
-        ]
-      },
-      "editable": true,
-      "gnetId": null,
-      "graphTooltip": 0,
-      "id": null,
-      "iteration": 1,
-      "links": [],
-      "panels": [
-        {
-          "datasource": "VictoriaMetrics",
-          "fieldConfig": {"defaults": {}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
-          "id": 1,
-          "title": "random_gauge_1",
-          "type": "timeseries",
-          "targets": [
-            {"expr": "random_gauge_1", "refId": "A", "interval": "60s"}
-          ]
-        },
-        {
-          "datasource": "VictoriaMetrics",
-          "fieldConfig": {"defaults": {}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
-          "id": 2,
-          "title": "random_gauge_2",
-          "type": "timeseries",
-          "targets": [
-            {"expr": "random_gauge_2", "refId": "A", "interval": "60s"}
-          ]
-        },
-        {
-          "datasource": "VictoriaMetrics",
-          "fieldConfig": {"defaults": {}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
-          "id": 3,
-          "title": "random_gauge_3",
-          "type": "timeseries",
-          "targets": [
+            "panels": [
+              {
+                "datasource": "VictoriaMetrics",
+                "fieldConfig": {"defaults": {}, "overrides": []},
+                "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+                "id": 2,
+                "title": "random_gauge_2",
+                "type": "timeseries",
+                "targets": [
+                  {"expr": "random_gauge_2", "refId": "A", "interval": "60s"}
+                ]
+              },
+              {
+                "datasource": "VictoriaMetrics",
+                "fieldConfig": {"defaults": {}, "overrides": []},
+                "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+                "id": 3,
+                "title": "random_gauge_3",
+                "type": "timeseries",
+                "targets": [
+                  {"expr": "random_gauge_3", "refId": "A", "interval": "60s"}
+                ]
+              },
+              {
+                "datasource": "VictoriaMetrics",
+                "fieldConfig": {"defaults": {}, "overrides": []},
+                "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+                "id": 5,
+                "title": "random_histogram_sum",
+                "type": "timeseries",
+                "targets": [
+                  {"expr": "random_histogram_sum", "refId": "A", "interval": "60s"}
+                ]
+              }
+            ],
             {"expr": "random_gauge_3", "refId": "A", "interval": "60s"}
-          ]
-        },
-        {
-          "datasource": "VictoriaMetrics",
-          "fieldConfig": {"defaults": {}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
-          "id": 4,
-          "title": "random_histogram_count",
-          "type": "timeseries",
-          "targets": [
-            {"expr": "random_histogram_count", "refId": "A", "interval": "60s"}
-          ]
-        },
-        {
-          "datasource": "VictoriaMetrics",
-          "fieldConfig": {"defaults": {}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
-          "id": 5,
-          "title": "random_histogram_sum",
-          "type": "timeseries",
-          "targets": [
-            {"expr": "random_histogram_sum", "refId": "A", "interval": "60s"}
-          ]
-        },
-        {
-          "datasource": "VictoriaMetrics",
-          "fieldConfig": {"defaults": {}, "overrides": []},
-          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
-          "id": 6,
-          "title": "random_histogram_bucket (95th percentile)",
-          "type": "timeseries",
-          "targets": [
-            {"expr": "histogram_quantile(0.95, sum(rate(random_histogram_bucket[5m])) by (le))", "refId": "A", "interval": "60s"}
-          ]
-        }
-      ],
-      "refresh": "10s",
-      "schemaVersion": 30,
-      "style": "dark",
-      "tags": ["random", "metrics"],
-      "templating": {"list": []},
-      "time": {"from": "now-1h", "to": "now"},
-      "timepicker": {},
-      "timezone": "browser",
-      "title": "Random Metrics Overview",
-      "uid": null,
-      "version": 1
-    }
