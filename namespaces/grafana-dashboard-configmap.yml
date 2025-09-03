@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-spam2000-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/instance: grafana
+data:
+  spam2000-dashboard.json: |
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": "-- Grafana --",
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "editable": true,
+      "gnetId": null,
+      "graphTooltip": 0,
+      "id": null,
+      "iteration": 1625246745976,
+      "links": [],
+      "panels": [
+        {
+          "datasource": "VictoriaMetrics",
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 0
+          },
+          "id": 1,
+          "options": {},
+          "targets": [
+            {
+              "expr": "rate(spam2000_requests_total[5m])",
+              "interval": "",
+              "legendFormat": "Requests/sec",
+              "refId": "A"
+            },
+            {
+              "expr": "up{job=\"spam2000-app\"}",
+              "interval": "",
+              "legendFormat": "Spam2000 Up",
+              "refId": "B"
+            }
+          ],
+          "title": "Spam2000 Application Metrics",
+          "type": "timeseries"
+        }
+      ],
+      "refresh": "10s",
+      "schemaVersion": 30,
+      "style": "dark",
+      "tags": [
+        "spam2000",
+        "victoriametrics"
+      ],
+      "templating": {
+        "list": []
+      },
+      "time": {
+        "from": "now-1h",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "Spam2000 Application Dashboard",
+      "uid": "spam2000-dashboard",
+      "version": 1
+    }

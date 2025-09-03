@@ -86,7 +86,7 @@ grafana:
       datasources:
       - name: VictoriaMetrics
         type: prometheus
-        url: http://{{ .Release.Name }}-victoria-metrics-single-server.{{ .Release.Namespace }}.svc.cluster.local:8428
+        url: http://{{ .Release.Name }}-victoria-metrics-single-server:8428
         access: proxy
         isDefault: true
         editable: false
@@ -96,20 +96,6 @@ grafana:
           httpMethod: POST
 
   # No Prometheus Operator resources needed - using Victoria Metrics directly
-
-  # Dashboard providers - use sidecar approach
-  dashboardProviders:
-    dashboardproviders.yaml:
-      apiVersion: 1
-      providers:
-      - name: 'default'
-        orgId: 1
-        folder: ''
-        type: file
-        disableDeletion: false
-        updateIntervalSeconds: 10
-        options:
-          path: /var/lib/grafana/dashboards/default
 
   # Sidecar configuration for dashboard discovery
   sidecar:
@@ -125,6 +111,15 @@ grafana:
         requests:
           cpu: 50m
           memory: 64Mi
+      # Add proper dashboard loading configuration
+      defaultFolderName: "General"
+      searchNamespace: "monitoring"
+      # Ensure proper file permissions
+      skipInvalidDashboards: false
+      # Add health check
+      healthCheck:
+        enabled: true
+        timeout: 30s
 
   # Resource limits - optimized
   resources:
