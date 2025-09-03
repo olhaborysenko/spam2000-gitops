@@ -28,8 +28,10 @@ victoria-metrics-single:
       requests:
         cpu: 100m
         memory: 256Mi
-    # Add scrape configuration argument
-    extraArgs:
+    # Override the command to include scrape config
+    command:
+      - /victoria-metrics-prod
+      - --httpListenAddr=:8428
       - --promscrape.config=/etc/victoria-metrics/scrape-config.yaml
     # Mount the scrape config
     extraVolumeMounts:
