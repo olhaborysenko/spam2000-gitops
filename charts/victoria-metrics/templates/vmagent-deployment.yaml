@@ -25,7 +25,7 @@ spec:
           image: victoriametrics/vmagent:latest
           args:
             - -promscrape.config=/etc/vmagent/scrape-config.yaml
-            - -remoteWrite.url=http://{{ .Release.Name }}-victoria-metrics-single-server:8428/api/v1/write
+            - -remoteWrite.url=http://{{ .Release.Name }}-victoria-metrics-single-server.monitoring.svc.cluster.local:8428/api/v1/write
             - -httpListenAddr=0.0.0.0:8429
           ports:
             - containerPort: 8429
