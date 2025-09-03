@@ -29,9 +29,9 @@ victoria-metrics-single:
         cpu: 200m
         memory: 512Mi
     extraArgs:
-      - -search.maxConcurrentRequests=2
-      - -search.maxQueryDuration=30s
-      - -search.maxQueueDuration=10s
+      search.maxConcurrentRequests: "2"
+      search.maxQueryDuration: "30s"
+      search.maxQueueDuration: "10s"
     # No extra configuration needed - Victoria Metrics exposes /metrics automatically
 
   # Persistence configuration
