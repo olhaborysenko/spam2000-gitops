@@ -41,9 +41,9 @@
             "refId": "A"
           },
           {
-            "expr": "vm_alive_targets",
+            "expr": "up{job=\"spam2000-app\"}",
             "interval": "",
-            "legendFormat": "Alive Targets",
+            "legendFormat": "Spam2000 Up",
             "refId": "B"
           }
         ],

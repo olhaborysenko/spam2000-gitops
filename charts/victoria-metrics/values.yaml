@@ -18,7 +18,7 @@ victoria-metrics-single:
     runAsGroup: 1000
     fsGroup: 1000
 
-  # Server configuration with resources
+  # Server configuration with resources and scrape config
   server:
     enabled: true
     resources:
@@ -28,6 +28,19 @@ victoria-metrics-single:
       requests:
         cpu: 100m
         memory: 256Mi
+    # Add scrape configuration argument
+    extraArgs:
+      - --promscrape.config=/etc/victoria-metrics/scrape-config.yaml
+    # Mount the scrape config
+    extraVolumeMounts:
+      - name: scrape-config
+        mountPath: /etc/victoria-metrics
+        readOnly: true
+    # Add the scrape config volume
+    extraVolumes:
+      - name: scrape-config
+        configMap:
+          name: victoria-metrics-scrape-config
 
   # Persistence configuration
   persistence:

@@ -95,12 +95,7 @@ grafana:
           queryTimeout: 60s
           httpMethod: POST
 
-  # Enable Prometheus Operator resources for monitoring
-  serviceMonitor:
-    enabled: true
-  
-  prometheusRule:
-    enabled: true
+  # No Prometheus Operator resources needed - using Victoria Metrics directly
 
   # Dashboard providers - use sidecar approach
   dashboardProviders:
