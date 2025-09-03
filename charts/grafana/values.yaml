@@ -1,80 +1,89 @@
 # Grafana values with custom configuration
 grafana:
-  # Admin user configuration - password will come from secret
+  # Admin user configuration
   adminUser: admin
-  # adminPassword will be set via environment variable from secret
-  # The official chart will use the secret automatically
-  
+
+  # Security context - best practice
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 472
+    runAsGroup: 472
+    fsGroup: 472
+
+  # Persistence configuration
   persistence:
     enabled: true
     size: 10Gi
-  
-  # Grafana service configuration - use 3001 for both external and internal
+    storageClassName: ""
+    accessModes:
+      - ReadWriteOnce
+
+  # Service configuration
   service:
     type: ClusterIP
-    port: 3001
-    targetPort: 3001
-  
-  # Grafana server configuration - listen on port 3001 internally
+    port: 80
+    targetPort: 3000
+    annotations: {}
+
+  # Grafana configuration
   grafana.ini:
     server:
-      http_port: 3001
+      http_port: 3000
       root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
     database:
       type: sqlite3
       path: /var/lib/grafana/grafana.db
     security:
-      admin_user: admin
-      allow_embedding: true
+      allow_embedding: false
+      cookie_secure: true
+      cookie_samesite: strict
     users:
       allow_sign_up: false
       allow_org_create: false
+      auto_assign_org_role: Viewer
     auth:
       disable_login_form: false
       disable_signout_menu: false
     log:
       mode: console
       level: info
-    server:
-      http_port: 3001
-      root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
-      serve_from_sub_path: false
-  
-  # Health check probes - use port 3001
+
+  # Health check probes - standardized
   livenessProbe:
     httpGet:
       path: /api/health
-      port: 3001
-    initialDelaySeconds: 120
+      port: 3000
+    initialDelaySeconds: 60
     periodSeconds: 30
-    failureThreshold: 5
+    failureThreshold: 3
     timeoutSeconds: 10
-  
+
   readinessProbe:
     httpGet:
-      path: /api/health
-      port: 3001
-    initialDelaySeconds: 60
-    periodSeconds: 15
-    failureThreshold: 5
-    timeoutSeconds: 10
-  
-  # Data sources configuration
+      path: /api/ready
+      port: 3000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+
+  # Data sources configuration - use template for service discovery
   datasources:
     datasources.yaml:
       apiVersion: 1
       datasources:
       - name: VictoriaMetrics
         type: prometheus
-        url: http://victoria-metrics-victoria-metrics-single-server:8428
+        url: http://{{ .Release.Name }}-victoria-metrics-single-server.{{ .Release.Namespace }}.svc.cluster.local:8428
         access: proxy
         isDefault: true
-        editable: true
+        editable: false
         jsonData:
           timeInterval: 15s
           queryTimeout: 60s
-  
-  # Dashboard providers
+          httpMethod: POST
+
+  # Dashboard providers - simplified
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -85,96 +94,20 @@ grafana:
         type: file
         disableDeletion: false
         updateIntervalSeconds: 10
-        allowUiUpdates: true
         options:
           path: /var/lib/grafana/dashboards/default
-  
-  # Dashboards configuration - must be at root level for Helm chart
+
+  # Custom dashboards
   dashboards:
     default:
-      # Only include the dashboards we want
-      node-exporter:
-        gnetId: 1860
-        revision: 22
-        datasource: VictoriaMetrics
-      kubernetes-cluster:
-        gnetId: 7249
-        revision: 1
-        datasource: VictoriaMetrics
-      victoria-metrics:
-        gnetId: 11174
-        revision: 1
-        datasource: VictoriaMetrics
-      spam2000-app:
-        gnetId: 315
-        revision: 1
-        datasource: VictoriaMetrics
-        title: "Spam2000 Application Metrics"
-        uid: spam2000-app
-        panels:
-          - title: "Spam2000 Request Rate"
-            type: graph
-            targets:
-              - expr: 'rate(spam2000_requests_total[5m])'
-                legendFormat: "Requests/sec"
-          - title: "Spam2000 Response Time"
-            type: graph
-            targets:
-              - expr: 'histogram_quantile(0.95, rate(spam2000_request_duration_seconds_bucket[5m]))'
-                legendFormat: "95th percentile"
-          - title: "Spam2000 Error Rate"
-            type: graph
-            targets:
-              - expr: 'rate(spam2000_errors_total[5m])'
-                legendFormat: "Errors/sec"
-  
-  ingress:
-    enabled: false
-  
-  # Admin credentials - use standard configuration
-  adminUser: admin
-  # Let Helm manage the admin password automatically
-  # The secret will be created by the chart
-  
-  # Resource limits and requests to satisfy namespace quota
+      spam2000-metrics:
+        file: dashboards/vm-custom-stats.json
+
+  # Resource limits - optimized
   resources:
     limits:
-      cpu: 1000m
-      memory: 2Gi
+      cpu: 500m
+      memory: 1Gi
     requests:
-      cpu: 250m
-      memory: 512Mi
-  
-  # Init container resources - must be at root level for quota compliance
-  initChownData:
-    resources:
-      limits:
-        cpu: 200m
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
-  
-  # Download dashboards resources - must be at root level for quota compliance
-  downloadDashboards:
-    resources:
-      limits:
-        cpu: 200m
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
-  
-  # Sidecar resources - must be at root level for quota compliance
-  sidecar:
-    resources:
-      limits:
-        cpu: 200m
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
-  
-
-  
-
+      cpu: 100m
+      memory: 256Mi

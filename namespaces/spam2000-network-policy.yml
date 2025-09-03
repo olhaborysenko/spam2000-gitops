@@ -6,7 +6,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: spam2000
+      app.kubernetes.io/name: spam2000
   policyTypes:
   - Ingress
   - Egress
@@ -17,27 +17,19 @@ spec:
           name: monitoring
     ports:
     - protocol: TCP
-      port: 8080
-    - protocol: TCP
-      port: 9090
+      port: 3000
   - from:
     - namespaceSelector:
         matchLabels:
           name: argocd
     ports:
     - protocol: TCP
-      port: 8080
+      port: 3000
   egress:
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9090
   - to: []
     ports:
     - protocol: TCP
       port: 53
     - protocol: UDP
       port: 53
+  - to: []

@@ -4,13 +4,7 @@ metadata:
   name: monitoring-network-policy
   namespace: monitoring
 spec:
-  podSelector:
-    matchExpressions:
-    - key: app.kubernetes.io/name
-      operator: In
-      values:
-      - grafana
-      - victoria-metrics-single
+  podSelector: {}
   policyTypes:
   - Ingress
   - Egress
@@ -19,30 +13,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           name: argocd
-    ports:
-    - protocol: TCP
-      port: 3001
-    - protocol: TCP
-      port: 8428
-  egress:
-  - to:
+  - from:
     - namespaceSelector:
         matchLabels:
           name: spam2000
-    ports:
-    - protocol: TCP
-      port: 3000
-    - protocol: TCP
-      port: 9090
+  egress:
   - to: []
-    ports:
-    - protocol: TCP
-      port: 53
-    - protocol: UDP
-      port: 53
-  - to: []
-    ports:
-    - protocol: TCP
-      port: 80
-    - protocol: TCP
-      port: 443

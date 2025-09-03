@@ -19,40 +19,47 @@ service:
   port: 3000
   targetPort: 3000
 
-resources:
-  limits:
-    cpu: 1000m
-    memory: 1Gi
-  requests:
-    cpu: 250m
-    memory: 256Mi
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
-# Pod security context
-podSecurityContext: {}
+# Pod security context - best practice
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
 
 # Container security context
-securityContext: {}
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1000
 
-# Liveness probe
+# Resource requirements - optimized
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+# Health probes - optimized
 livenessProbe:
   httpGet:
-    path: /
-    port: 3000
-  initialDelaySeconds: 60
-  periodSeconds: 30
-  failureThreshold: 3
-
-# Readiness probe
-readinessProbe:
-  httpGet:
-    path: /
+    path: /health
     port: 3000
   initialDelaySeconds: 30
+  periodSeconds: 30
+  failureThreshold: 3
+  timeoutSeconds: 5
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 3000
+  initialDelaySeconds: 15
   periodSeconds: 10
   failureThreshold: 3
+  timeoutSeconds: 5
