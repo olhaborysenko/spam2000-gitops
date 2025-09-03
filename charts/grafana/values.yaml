@@ -39,7 +39,7 @@ grafana:
     security:
       allow_embedding: false
       cookie_secure: false
-      cookie_samesite: strict
+      cookie_samesite: Lax
       disable_initial_admin_creation: true
       disable_brute_force_login_protection: true  # Disable login attempt lockout
     users:
