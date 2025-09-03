@@ -2,8 +2,8 @@
 replicaCount: 1
 
 image:
-  repository: oborisenko/spam2000
-  tag: "ipv4fix"
+  repository: andriiuni/spam2000
+  tag: "1.1394.355"
   pullPolicy: IfNotPresent
 
 nameOverride: ""
