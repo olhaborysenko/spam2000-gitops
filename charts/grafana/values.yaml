@@ -72,7 +72,7 @@ grafana:
 
   readinessProbe:
     httpGet:
-      path: /api/ready  # Use /api/health instead of /api/ready
+      path: /api/health  # Use /api/health instead of /api/ready
       port: 3001
     initialDelaySeconds: 30
     periodSeconds: 10
