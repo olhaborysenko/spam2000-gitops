@@ -132,7 +132,7 @@ To deploy all resources at once, use the provided Python script:
 python3 deploy_all.py
 ```
 
-This script applies all manifests and verifies pod status. If you need to access Grafana or VictoriaMetrics UIs, use the port-forward commands above in a separate terminal.
+This script applies all manifests and verifies pod status. If you need to access Grafana or VictoriaMetrics UIs, use the port-forward commands.
 
 ---
 
