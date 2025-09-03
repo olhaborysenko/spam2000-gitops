@@ -19,19 +19,19 @@ victoria-metrics-single:
     fsGroup: 1000
 
   # Server configuration with resources and scrape config
-   server:
-     enabled: true
-     resources:
-       limits:
-         cpu: 500m
-         memory: 1Gi
-       requests:
-         cpu: 200m
-         memory: 512Mi
-     extraArgs:
-       - -search.maxConcurrentRequests=2
-       - -search.maxQueryDuration=30s
-       - -search.maxQueueDuration=10s
+  server:
+    enabled: true
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 200m
+        memory: 512Mi
+    extraArgs:
+      - -search.maxConcurrentRequests=2
+      - -search.maxQueryDuration=30s
+      - -search.maxQueueDuration=10s
     # No extra configuration needed - Victoria Metrics exposes /metrics automatically
 
   # Persistence configuration
