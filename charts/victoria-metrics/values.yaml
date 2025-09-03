@@ -125,7 +125,7 @@ victoria-metrics-single:
     extraVolumes:
       - name: scrape-config
         configMap:
-          name: {{ include "victoria-metrics.fullname" . }}-scrape-config
+          name: victoria-metrics-scrape-config
 
   # Scrape configuration via ConfigMap
   scrapeConfig:
