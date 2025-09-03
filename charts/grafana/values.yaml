@@ -95,7 +95,7 @@ grafana:
           queryTimeout: 60s
           httpMethod: POST
 
-  # Dashboard providers - simplified
+  # Dashboard providers - use sidecar approach
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -109,11 +109,20 @@ grafana:
         options:
           path: /var/lib/grafana/dashboards/default
 
-  # Custom dashboards
-  dashboards:
-    default:
-      vm-custom-stats:
-        file: dashboards/vm-custom-stats.json
+  # Sidecar configuration for dashboard discovery
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      searchNamespace: ALL
+      folder: /var/lib/grafana/dashboards/default
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 50m
+          memory: 64Mi
 
   # Resource limits - optimized
   resources:

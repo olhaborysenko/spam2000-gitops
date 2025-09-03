@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "grafana.fullname" . }}-spam2000-dashboard
+  labels:
+    {{- include "grafana.labels" . | nindent 4 }}
+  annotations:
+    grafana_dashboard: "1"
+data:
+  spam2000-dashboard.json: |
+{{ .Files.Get "dashboards/vm-custom-stats.json" | indent 4 }}
