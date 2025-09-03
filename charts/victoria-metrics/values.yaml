@@ -20,6 +20,7 @@ victoria-metrics-single:
 
   # Server configuration with resources
   server:
+    enabled: true
     resources:
       limits:
         cpu: 500m
@@ -51,11 +52,6 @@ victoria-metrics-single:
 
   # Basic container settings
   containerPort: 8428
-
-  # Server configuration - only supported fields
-  server:
-    enabled: true
-    # No extra configuration needed - Victoria Metrics exposes /metrics automatically
 
   # Metrics collection configuration
   metrics:
