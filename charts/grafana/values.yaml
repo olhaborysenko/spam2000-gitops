@@ -135,7 +135,7 @@ grafana:
   # Create it with: kubectl create secret generic grafana-admin-secret -n monitoring --from-literal=admin-password=your_password
   
   # Reference the existing secret
-  secretName: grafana-admin-secret
+  secretName: grafana
   
   # Resource limits and requests to satisfy namespace quota
   resources:
