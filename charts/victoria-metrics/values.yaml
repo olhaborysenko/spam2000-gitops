@@ -55,6 +55,7 @@ victoria-metrics-single:
 
   # Victoria Metrics server configuration
   server:
+    enabled: true
     # No extra configuration needed - using built-in config
 
   # Use built-in scrape configuration
