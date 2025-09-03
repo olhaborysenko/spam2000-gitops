@@ -105,13 +105,32 @@ grafana:
       healthCheck:
         enabled: true
         timeout: 30s
-    resources:
-      limits:
-        cpu: 100m
-        memory: 128Mi
-      requests:
-        cpu: 50m
-        memory: 64Mi
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 50m
+          memory: 64Mi
+
+  # Dashboard configuration
+  dashboards:
+    default:
+      # Victoria Metrics dashboard
+      victoria-metrics:
+        gnetId: 14178
+        revision: 1
+        datasource: VictoriaMetrics
+      # Node Exporter dashboard
+      node-exporter:
+        gnetId: 1860
+        revision: 28
+        datasource: VictoriaMetrics
+      # Kubernetes Cluster dashboard
+      kubernetes-cluster:
+        gnetId: 315
+        revision: 3
+        datasource: VictoriaMetrics
 
 
   # Resource limits - optimized
