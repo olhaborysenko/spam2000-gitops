@@ -148,35 +148,37 @@ grafana:
       cpu: 250m
       memory: 512Mi
   
-  # Init container resources
-  initChownData:
-    resources:
-      limits:
-        cpu: 200m
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
-  
-  # Download dashboards resources - this is the container causing the quota issue
-  downloadDashboards:
-    resources:
-      limits:
-        cpu: 200m
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
-  
-  # Sidecar resources for any additional containers
-  sidecar:
-    resources:
-      limits:
-        cpu: 200m
-        memory: 256Mi
-      requests:
-        cpu: 100m
-        memory: 128Mi
+  # Resource configurations
+  grafana:
+    # Init container resources
+    initChownData:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+    
+    # Download dashboards resources
+    downloadDashboards:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+    
+    # Sidecar resources
+    sidecar:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 256Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
   
 
   
