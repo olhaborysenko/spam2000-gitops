@@ -111,8 +111,8 @@ kubectl get pods -n monitoring
 ### 3️⃣ Access Services
 
 ```bash
-# Port forward to Grafana (run manually if needed)
-kubectl port-forward -n monitoring svc/grafana 3000:80
+# Port forward to Grafana (now on port 3001)
+kubectl port-forward -n monitoring svc/grafana 3001:3001
 
 # Port forward to VictoriaMetrics (run manually if needed)
 kubectl port-forward -n monitoring svc/victoria-metrics-single-server 8428:8428
